@@ -4,6 +4,8 @@ import cookieParser from "cookie-parser";
 import env from "./config/environment";
 import { expressErrorHandler } from "./config/error";
 import merchantRouter from "./routes/merchant";
+import userRouter from "./routes/user";
+import bankRouter from "./routes/bank";
 
 const app = express();
 
@@ -12,6 +14,8 @@ app.use(helmet());
 app.use(cookieParser());
 
 app.use("/merchant", merchantRouter);
+app.use("/user", userRouter);
+app.use("/bank", bankRouter);
 
 app.use(expressErrorHandler);
 
