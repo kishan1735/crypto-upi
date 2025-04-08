@@ -52,3 +52,17 @@ export const register = asyncHandler(async (req, res, next) => {
   });
   res.status(201).json({ success: true });
 });
+
+export const paramsSchema = z.object({
+  id: z.string().nonempty(),
+});
+
+export const getUserById = asyncHandler(async (req, res, _next) => {
+  const parsed = paramsSchema.parse(req.params);
+
+  const user = await db.query.users.findFirst({
+    where: (users) => eq(users.id, parsed.id),
+  });
+
+  res.status(200).json({ success: true, user });
+});

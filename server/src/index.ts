@@ -23,7 +23,6 @@ app.use(
           "allow access from the specified origin."
       );
       if (!origin) return callback(null, true);
-      console.log(origin, env.FRONTEND_URL);
       if (origin != env.FRONTEND_URL) {
         console.log("CORS policy not allowed for origin: " + origin);
         return callback(err, false);
