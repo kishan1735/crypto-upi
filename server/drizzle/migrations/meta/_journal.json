@@ -8,6 +8,13 @@
       "when": 1742993302781,
       "tag": "0000_early_wild_pack",
       "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "7",
+      "when": 1744059091627,
+      "tag": "0001_modern_lester",
+      "breakpoints": true
     }
   ]
 }

@@ -7,16 +7,15 @@ import { eq } from "drizzle-orm";
 import { HttpCode, HttpError } from "@/config/error";
 import { users } from "@/config/db/schema";
 import bcrypt from "bcryptjs";
-import validator from "validator";
 
 const registerSchema = z.object({
   name: z.string().nonempty(),
   ifscCode: z.string().length(11),
   password: z.string().nonempty(),
-  amount: z.number().default(0),
-  phoneNumber: z
-    .string()
-    .refine(validator.isMobilePhone, { message: "Not a valid phone number" }),
+  amount: z.string().refine((val) => !isNaN(Number(val)), {
+    message: "Amount must be a valid number",
+  }),
+  phoneNumber: z.string(),
   pin: z
     .string()
     .length(16)
@@ -45,7 +44,7 @@ export const register = asyncHandler(async (req, res, next) => {
   await db.insert(users).values({
     name,
     bankIfsc: ifscCode,
-    amount,
+    amount: +amount,
     hashedPassword,
     phoneNumber,
     mmid,

@@ -8,12 +8,16 @@ import { HttpCode, HttpError } from "@/config/error";
 import { merchants } from "@/config/db/schema";
 import bcrypt from "bcryptjs";
 
-const registerSchema = z.object({
+export const registerSchema = z.object({
   name: z.string().nonempty(),
   ifscCode: z.string().length(11),
   password: z.string().nonempty(),
-  amount: z.number().default(0),
+  amount: z.string().refine((val) => !isNaN(Number(val)), {
+    message: "Amount must be a valid number",
+  }),
 });
+
+export type RegisterType = z.infer<typeof registerSchema>;
 
 export const register = asyncHandler(async (req, res, next) => {
   const { name, ifscCode, password, amount } = registerSchema.parse(req.body);
@@ -34,7 +38,7 @@ export const register = asyncHandler(async (req, res, next) => {
   await db.insert(merchants).values({
     name,
     bankIfsc: ifscCode,
-    amount,
+    amount: +amount,
     hashedPassword,
     merchantID: mid,
     createdAt: time,
