@@ -1,12 +1,26 @@
+import fs from "fs";
+import path from "path";
 import { Block } from "./block";
 import sha256 from "crypto-js/sha256";
 import encHex from "crypto-js/enc-hex";
+
+const DATA_FILE = path.join(__dirname, "block_data.json");
 
 export class Blockchain {
   private chain: Block[] = [];
 
   constructor() {
-    this.createGenesisBlock();
+    if (fs.existsSync(DATA_FILE)) {
+      const data = fs.readFileSync(DATA_FILE, "utf-8");
+      this.chain = JSON.parse(data);
+    } else {
+      this.createGenesisBlock();
+      this.saveChain();
+    }
+  }
+
+  private saveChain() {
+    fs.writeFileSync(DATA_FILE, JSON.stringify(this.chain, null, 2), "utf-8");
   }
 
   private createGenesisBlock() {
@@ -40,6 +54,7 @@ export class Blockchain {
     const previousHash = this.chain[this.chain.length - 1].hash;
     const newBlock = this.createBlock(uid, mid, amount, previousHash);
     this.chain.push(newBlock);
+    this.saveChain();
     return newBlock;
   }
 

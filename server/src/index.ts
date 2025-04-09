@@ -6,6 +6,7 @@ import { expressErrorHandler, HttpCode, HttpError } from "./config/error";
 import merchantRouter from "./routes/merchant";
 import userRouter from "./routes/user";
 import bankRouter from "./routes/bank";
+import upiRouter from "./routes/upi";
 import cors from "cors";
 
 const app = express();
@@ -36,6 +37,7 @@ app.use(
 app.use("/merchant", merchantRouter);
 app.use("/user", userRouter);
 app.use("/bank", bankRouter);
+app.use("/upi", upiRouter);
 
 app.use(expressErrorHandler);
 

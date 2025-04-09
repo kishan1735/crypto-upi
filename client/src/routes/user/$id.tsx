@@ -2,7 +2,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
 import { useQuery } from "@tanstack/react-query";
-import { createFileRoute, useParams } from "@tanstack/react-router";
+import { createFileRoute, Link, useParams } from "@tanstack/react-router";
 import axios from "axios";
 
 export const Route = createFileRoute("/user/$id")({
@@ -56,7 +56,11 @@ function RouteComponent() {
             </Label>
             <div id="phone">{data.phoneNumber}</div>
           </div>
-          <Button className="mt-6 cursor-pointer">Enter UPI Transaction</Button>
+          <Link to="/user/transaction/$id" params={{ id }} className="flex">
+            <Button className="mt-6 cursor-pointer mx-auto">
+              Enter UPI Transaction
+            </Button>
+          </Link>
         </CardContent>
       </Card>
     </div>

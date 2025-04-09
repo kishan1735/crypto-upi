@@ -20,6 +20,8 @@ import { Route as UserIdImport } from './routes/user/$id'
 import { Route as MerchantSignupImport } from './routes/merchant/signup'
 import { Route as MerchantLoginImport } from './routes/merchant/login'
 import { Route as MerchantIdImport } from './routes/merchant/$id'
+import { Route as UserTransactionIdImport } from './routes/user/transaction.$id'
+import { Route as MerchantTransactionIdImport } from './routes/merchant/transaction.$id'
 
 // Create/Update Routes
 
@@ -74,6 +76,18 @@ const MerchantLoginRoute = MerchantLoginImport.update({
 const MerchantIdRoute = MerchantIdImport.update({
   id: '/merchant/$id',
   path: '/merchant/$id',
+  getParentRoute: () => rootRoute,
+} as any)
+
+const UserTransactionIdRoute = UserTransactionIdImport.update({
+  id: '/user/transaction/$id',
+  path: '/user/transaction/$id',
+  getParentRoute: () => rootRoute,
+} as any)
+
+const MerchantTransactionIdRoute = MerchantTransactionIdImport.update({
+  id: '/merchant/transaction/$id',
+  path: '/merchant/transaction/$id',
   getParentRoute: () => rootRoute,
 } as any)
 
@@ -144,6 +158,20 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof UserIndexImport
       parentRoute: typeof rootRoute
     }
+    '/merchant/transaction/$id': {
+      id: '/merchant/transaction/$id'
+      path: '/merchant/transaction/$id'
+      fullPath: '/merchant/transaction/$id'
+      preLoaderRoute: typeof MerchantTransactionIdImport
+      parentRoute: typeof rootRoute
+    }
+    '/user/transaction/$id': {
+      id: '/user/transaction/$id'
+      path: '/user/transaction/$id'
+      fullPath: '/user/transaction/$id'
+      preLoaderRoute: typeof UserTransactionIdImport
+      parentRoute: typeof rootRoute
+    }
   }
 }
 
@@ -159,6 +187,8 @@ export interface FileRoutesByFullPath {
   '/user/signup': typeof UserSignupRoute
   '/merchant': typeof MerchantIndexRoute
   '/user': typeof UserIndexRoute
+  '/merchant/transaction/$id': typeof MerchantTransactionIdRoute
+  '/user/transaction/$id': typeof UserTransactionIdRoute
 }
 
 export interface FileRoutesByTo {
@@ -171,6 +201,8 @@ export interface FileRoutesByTo {
   '/user/signup': typeof UserSignupRoute
   '/merchant': typeof MerchantIndexRoute
   '/user': typeof UserIndexRoute
+  '/merchant/transaction/$id': typeof MerchantTransactionIdRoute
+  '/user/transaction/$id': typeof UserTransactionIdRoute
 }
 
 export interface FileRoutesById {
@@ -184,6 +216,8 @@ export interface FileRoutesById {
   '/user/signup': typeof UserSignupRoute
   '/merchant/': typeof MerchantIndexRoute
   '/user/': typeof UserIndexRoute
+  '/merchant/transaction/$id': typeof MerchantTransactionIdRoute
+  '/user/transaction/$id': typeof UserTransactionIdRoute
 }
 
 export interface FileRouteTypes {
@@ -198,6 +232,8 @@ export interface FileRouteTypes {
     | '/user/signup'
     | '/merchant'
     | '/user'
+    | '/merchant/transaction/$id'
+    | '/user/transaction/$id'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -209,6 +245,8 @@ export interface FileRouteTypes {
     | '/user/signup'
     | '/merchant'
     | '/user'
+    | '/merchant/transaction/$id'
+    | '/user/transaction/$id'
   id:
     | '__root__'
     | '/'
@@ -220,6 +258,8 @@ export interface FileRouteTypes {
     | '/user/signup'
     | '/merchant/'
     | '/user/'
+    | '/merchant/transaction/$id'
+    | '/user/transaction/$id'
   fileRoutesById: FileRoutesById
 }
 
@@ -233,6 +273,8 @@ export interface RootRouteChildren {
   UserSignupRoute: typeof UserSignupRoute
   MerchantIndexRoute: typeof MerchantIndexRoute
   UserIndexRoute: typeof UserIndexRoute
+  MerchantTransactionIdRoute: typeof MerchantTransactionIdRoute
+  UserTransactionIdRoute: typeof UserTransactionIdRoute
 }
 
 const rootRouteChildren: RootRouteChildren = {
@@ -245,6 +287,8 @@ const rootRouteChildren: RootRouteChildren = {
   UserSignupRoute: UserSignupRoute,
   MerchantIndexRoute: MerchantIndexRoute,
   UserIndexRoute: UserIndexRoute,
+  MerchantTransactionIdRoute: MerchantTransactionIdRoute,
+  UserTransactionIdRoute: UserTransactionIdRoute,
 }
 
 export const routeTree = rootRoute
@@ -265,7 +309,9 @@ export const routeTree = rootRoute
         "/user/login",
         "/user/signup",
         "/merchant/",
-        "/user/"
+        "/user/",
+        "/merchant/transaction/$id",
+        "/user/transaction/$id"
       ]
     },
     "/": {
@@ -294,6 +340,12 @@ export const routeTree = rootRoute
     },
     "/user/": {
       "filePath": "user/index.tsx"
+    },
+    "/merchant/transaction/$id": {
+      "filePath": "merchant/transaction.$id.tsx"
+    },
+    "/user/transaction/$id": {
+      "filePath": "user/transaction.$id.tsx"
     }
   }
 }
