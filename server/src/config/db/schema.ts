@@ -19,6 +19,7 @@ export const merchants = pgTable("merchant", {
     .notNull(),
   merchantID: varchar("merchant_id", { length: 16 }).notNull(),
   amount: integer("amount").notNull().default(0),
+  phoneNumber: text("phone_number").notNull(),
 });
 
 export const bankEnum = pgEnum("bank_enum", ["HDFC", "ICICI", "SBI"]);

@@ -27,6 +27,7 @@ const registerSchema = z.object({
   amount: z.string().refine((val) => !isNaN(Number(val)), {
     message: "Amount must be a valid number",
   }),
+  phoneNumber: z.string().nonempty(),
 });
 
 type RegisterType = z.infer<typeof registerSchema>;
@@ -109,6 +110,24 @@ function RouteComponent() {
                         render={({ field }) => (
                           <FormItem>
                             <FormLabel>IFSC Code</FormLabel>
+                            <FormControl>
+                              <Input
+                                className="text-center px-4"
+                                {...field}
+                                required
+                              />
+                            </FormControl>
+                          </FormItem>
+                        )}
+                      ></FormField>
+                    </div>
+                    <div className="grid gap-2">
+                      <FormField
+                        control={form.control}
+                        name="phoneNumber"
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormLabel>Phone Number</FormLabel>
                             <FormControl>
                               <Input
                                 className="text-center px-4"

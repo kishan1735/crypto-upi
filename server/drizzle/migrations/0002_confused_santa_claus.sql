@@ -1,0 +1,1 @@
+ALTER TABLE "merchant" ADD COLUMN "phone_number" text NOT NULL;

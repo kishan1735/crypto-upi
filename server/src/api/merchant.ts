@@ -15,12 +15,14 @@ export const registerSchema = z.object({
   amount: z.string().refine((val) => !isNaN(Number(val)), {
     message: "Amount must be a valid number",
   }),
+  phoneNumber: z.string().nonempty(),
 });
 
 export type RegisterType = z.infer<typeof registerSchema>;
 
 export const register = asyncHandler(async (req, res, next) => {
-  const { name, ifscCode, password, amount } = registerSchema.parse(req.body);
+  const { name, ifscCode, password, amount, phoneNumber } =
+    registerSchema.parse(req.body);
   const merchantExists = await db.query.merchants.findFirst({
     where: (merchant) => eq(merchant.bankIfsc, ifscCode),
   });
@@ -42,6 +44,7 @@ export const register = asyncHandler(async (req, res, next) => {
     hashedPassword,
     merchantID: mid,
     createdAt: time,
+    phoneNumber,
   });
   res.status(201).json({ success: true });
 });
