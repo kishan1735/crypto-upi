@@ -18,7 +18,6 @@ function RouteComponent() {
       return response.data.merchant;
     },
   });
-  console.log(data);
   if (isLoading)
     return (
       <div className="flex text-white h-screen items-center justify-center">

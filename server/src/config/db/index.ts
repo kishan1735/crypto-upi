@@ -10,5 +10,4 @@ export const db = drizzle(client, {
     ...schema,
     ...relations,
   },
-  logger: true,
 });
