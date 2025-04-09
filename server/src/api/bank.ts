@@ -21,7 +21,7 @@ export const init = asyncHandler(async (_req, res, _next) => {
 });
 export const bank = ["HDFC", "ICICI", "SBI"] as const;
 
-const bankParamsSchema = z.object({
+export const bankParamsSchema = z.object({
   name: z.enum(bank),
 });
 

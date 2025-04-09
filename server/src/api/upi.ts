@@ -13,6 +13,7 @@ import { asyncHandler } from "@/config/routeHandler";
 import { db } from "@/config/db";
 import { merchants, users } from "@/config/db/schema";
 import { Blockchain } from "@/config/blockchain/blockchain";
+import { bankParamsSchema } from "./bank";
 
 const transactionSchema = z.object({
   mmid: z.string().nonempty(),
@@ -75,30 +76,30 @@ export const handleUserTransaction = asyncHandler(async (req, res, next) => {
     const merch_with_bank = await tx.query.merchants.findFirst({
       where: (m) => eq(m.id, ms[0].id),
       with: {
-        bank: true,
+        merchant_bank: true,
       },
     });
 
     const user_with_bank = await tx.query.users.findFirst({
       where: (u) => eq(u.id, us[0].id),
       with: {
-        bank: true,
+        user_bank: true,
       },
     });
 
     if (
-      merch_with_bank?.bank.name === "HDFC" ||
-      user_with_bank?.bank.name === "HDFC"
+      merch_with_bank?.merchant_bank.name === "HDFC" ||
+      user_with_bank?.user_bank.name === "HDFC"
     ) {
       hdfc_blockchain.addTransaction(us[0].pin, ms[0].merchantID, amount);
     } else if (
-      merch_with_bank?.bank.name === "ICICI" ||
-      user_with_bank?.bank.name === "ICICI"
+      merch_with_bank?.merchant_bank.name === "ICICI" ||
+      user_with_bank?.user_bank.name === "ICICI"
     ) {
       icici_blockchain.addTransaction(us[0].pin, ms[0].merchantID, amount);
     } else if (
-      merch_with_bank?.bank.name === "SBI" ||
-      user_with_bank?.bank.name === "SBI"
+      merch_with_bank?.merchant_bank.name === "SBI" ||
+      user_with_bank?.user_bank.name === "SBI"
     ) {
       sbi_blockchain.addTransaction(us[0].pin, ms[0].merchantID, amount);
     }
@@ -149,3 +150,19 @@ export const generateQR = asyncHandler(async (req, res, next) => {
     qr: qrDataUrl,
   });
 });
+
+export const getAllTransactionsByBank = asyncHandler(
+  async (req, res, _next) => {
+    const { name } = bankParamsSchema.parse(req.params);
+    if (name === "HDFC") {
+      res.json({ chain: hdfc_blockchain.getChain() });
+    } else if (name === "SBI") {
+      res.json({ chain: sbi_blockchain.getChain() });
+    } else if (name === "ICICI") {
+      res.json({ chain: icici_blockchain.getChain() });
+    }
+    res
+      .status(500)
+      .json({ success: "false", message: "Internal Server Error" });
+  }
+);
