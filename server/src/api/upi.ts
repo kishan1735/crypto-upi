@@ -25,7 +25,9 @@ const paramsSchema = z.object({
   id: z.string().nonempty(),
 });
 
-const blockchain = new Blockchain();
+const hdfc_blockchain = new Blockchain("HDFC");
+const icici_blockchain = new Blockchain("ICICI");
+const sbi_blockchain = new Blockchain("SBI");
 
 export const handleUserTransaction = asyncHandler(async (req, res, next) => {
   const { mmid, vid, amount, pin } = transactionSchema.parse(req.body);
@@ -70,7 +72,36 @@ export const handleUserTransaction = asyncHandler(async (req, res, next) => {
       return next(new HttpError(HttpCode.NOT_FOUND, "User not found"));
     }
 
-    blockchain.addTransaction(us[0].pin, ms[0].merchantID, amount);
+    const merch_with_bank = await tx.query.merchants.findFirst({
+      where: (m) => eq(m.id, ms[0].id),
+      with: {
+        bank: true,
+      },
+    });
+
+    const user_with_bank = await tx.query.users.findFirst({
+      where: (u) => eq(u.id, us[0].id),
+      with: {
+        bank: true,
+      },
+    });
+
+    if (
+      merch_with_bank?.bank.name === "HDFC" ||
+      user_with_bank?.bank.name === "HDFC"
+    ) {
+      hdfc_blockchain.addTransaction(us[0].pin, ms[0].merchantID, amount);
+    } else if (
+      merch_with_bank?.bank.name === "ICICI" ||
+      user_with_bank?.bank.name === "ICICI"
+    ) {
+      icici_blockchain.addTransaction(us[0].pin, ms[0].merchantID, amount);
+    } else if (
+      merch_with_bank?.bank.name === "SBI" ||
+      user_with_bank?.bank.name === "SBI"
+    ) {
+      sbi_blockchain.addTransaction(us[0].pin, ms[0].merchantID, amount);
+    }
   });
 
   res.status(200).json({ success: true });

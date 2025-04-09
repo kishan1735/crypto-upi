@@ -4,14 +4,13 @@ import { Block } from "./block";
 import sha256 from "crypto-js/sha256";
 import encHex from "crypto-js/enc-hex";
 
-const DATA_FILE = path.join(__dirname, "block_data.json");
-
 export class Blockchain {
   private chain: Block[] = [];
-
-  constructor() {
-    if (fs.existsSync(DATA_FILE)) {
-      const data = fs.readFileSync(DATA_FILE, "utf-8");
+  public DATA_FILE: any;
+  constructor(bank: string) {
+    this.DATA_FILE = path.join(__dirname, `${bank} block_data.json`);
+    if (fs.existsSync(this.DATA_FILE)) {
+      const data = fs.readFileSync(this.DATA_FILE, "utf-8");
       this.chain = JSON.parse(data);
     } else {
       this.createGenesisBlock();
@@ -20,7 +19,11 @@ export class Blockchain {
   }
 
   private saveChain() {
-    fs.writeFileSync(DATA_FILE, JSON.stringify(this.chain, null, 2), "utf-8");
+    fs.writeFileSync(
+      this.DATA_FILE,
+      JSON.stringify(this.chain, null, 2),
+      "utf-8"
+    );
   }
 
   private createGenesisBlock() {
