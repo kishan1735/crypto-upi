@@ -59,3 +59,28 @@ export const getMerchantById = asyncHandler(async (req, res, _next) => {
 
   res.status(200).json({ success: true, merchant });
 });
+
+const loginSchema = z.object({
+  name: z.string().nonempty(),
+  password: z.string().nonempty(),
+});
+
+export const login = asyncHandler(async (req, res, next) => {
+  const parsed = loginSchema.parse(req.body);
+
+  const merchant = await db.query.merchants.findFirst({
+    where: (merchant) => eq(merchant.name, parsed.name),
+  });
+
+  if (!merchant) {
+    return next(new HttpError(HttpCode.NOT_FOUND, "User Not Found"));
+  }
+
+  const pass = await bcrypt.compare(parsed.password, merchant.hashedPassword);
+
+  if (!pass) {
+    return next(new HttpError(HttpCode.BAD_REQUEST, "Password Incorrect"));
+  }
+
+  res.status(200).json({ success: true, merchant });
+});

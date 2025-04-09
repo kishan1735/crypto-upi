@@ -66,3 +66,29 @@ export const getUserById = asyncHandler(async (req, res, _next) => {
 
   res.status(200).json({ success: true, user });
 });
+
+const loginSchema = z.object({
+  name: z.string().nonempty(),
+  password: z.string().nonempty(),
+});
+
+export const login = asyncHandler(async (req, res, next) => {
+  const parsed = loginSchema.parse(req.body);
+
+  const user = await db.query.users.findFirst({
+    where: (users) => eq(users.name, parsed.name),
+  });
+
+  if (!user) {
+    return next(new HttpError(HttpCode.NOT_FOUND, "User Not Found"));
+  }
+
+  const pass = await bcrypt.compare(parsed.password, user.hashedPassword);
+
+  if (!pass) {
+    return next(new HttpError(HttpCode.BAD_REQUEST, "Password Incorrect"));
+  }
+  console.log(user);
+
+  res.status(200).json({ success: true, user });
+});

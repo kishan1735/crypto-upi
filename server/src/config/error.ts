@@ -40,7 +40,7 @@ export const expressErrorHandler: ErrorRequestHandler = (
       feedback: err.feedback,
     });
   } else {
-    console.error(err);
+    console.log(err);
   }
   res
     .status((err as HttpError)?.status ?? 500)
