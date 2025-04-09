@@ -160,9 +160,10 @@ export const getAllTransactionsByBank = asyncHandler(
       res.json({ chain: sbi_blockchain.getChain() });
     } else if (name === "ICICI") {
       res.json({ chain: icici_blockchain.getChain() });
+    } else {
+      res
+        .status(500)
+        .json({ success: "false", message: "Internal Server Error" });
     }
-    res
-      .status(500)
-      .json({ success: "false", message: "Internal Server Error" });
   }
 );
