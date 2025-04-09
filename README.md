@@ -1,4 +1,4 @@
-- This application has been made for an assignment for the course Cryptography
+- This application has been made for the course Cryptography
 
 ### Setup Guide
 - **Backend**
