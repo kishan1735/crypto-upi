@@ -5,6 +5,7 @@
   - create a env file with appropriate env varialbles
   - `cd server`
   - `pnpm i`
+  - `pnpm db:migrate`
   - `pnpm start`
 - **Frontend**
   - `pnpm i`
