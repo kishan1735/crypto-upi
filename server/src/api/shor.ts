@@ -1,6 +1,3 @@
-// Import required modules
-import * as math from "mathjs";
-
 // Helper: Compute GCD
 function gcd(a: number, b: number): number {
   while (b !== 0) {
@@ -23,10 +20,10 @@ function modExp(base: number, exponent: number, modulus: number): number {
   return result;
 }
 
-// Mock Quantum Period Finder
+// Mock Quantum Period Finder (classical brute force)
 function findPeriod(a: number, n: number): number {
   let r = 1;
-  while (modExp(a, r, n) !== 1 && r < n) {
+  while (r < n && modExp(a, r, n) !== 1) {
     r++;
   }
   return r;
@@ -41,10 +38,10 @@ function shorsAlgorithm(n: number): number | null {
     if (gcdVal > 1) return gcdVal;
 
     const r = findPeriod(a, n);
-    if (r % 2 !== 0) continue;
+    if (r % 2 !== 0 || modExp(a, r / 2, n) === n - 1) continue;
 
-    const factor1 = gcd(modExp(a, r / 2) - 1, n);
-    const factor2 = gcd(modExp(a, r / 2) + 1, n);
+    const factor1 = gcd(modExp(a, r / 2, n) - 1, n);
+    const factor2 = gcd(modExp(a, r / 2, n) + 1, n);
 
     if (factor1 > 1 && factor1 < n) return factor1;
     if (factor2 > 1 && factor2 < n) return factor2;
