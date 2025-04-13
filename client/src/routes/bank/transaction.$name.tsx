@@ -21,7 +21,7 @@ function RouteComponent() {
     queryKey: [`bank ${name}`],
     queryFn: async () => {
       const response = await axios.get(
-        `http://localhost:8000/upi/bank/${name.toUpperCase()}`
+        `http://192.168.200.129:8000/upi/bank/${name.toUpperCase()}`
       );
       if (response.data.chain.length <= 1) return [];
       return response.data.chain.slice(1);
@@ -39,7 +39,7 @@ function RouteComponent() {
         Error fetching merchant
       </div>
     );
-  console.log(data);
+
   return (
     <div className="flex flex-col gap-6 justify-center items-center min-h-screen">
       <div className="text-white text-6xl uppercase">{name}</div>

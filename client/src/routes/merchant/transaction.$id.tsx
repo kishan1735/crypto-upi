@@ -13,7 +13,7 @@ function RouteComponent() {
     queryKey: [`merchant ${id}`],
     queryFn: async () => {
       const response = await axios.get(
-        `http://localhost:8000/upi/generate/${id}`
+        `http://192.168.200.129:8000/upi/generate/${id}`
       );
       return response.data.qr;
     },

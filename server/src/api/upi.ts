@@ -14,9 +14,10 @@ import { db } from "@/config/db";
 import { merchants, users } from "@/config/db/schema";
 import { Blockchain } from "@/config/blockchain/blockchain";
 import { bankParamsSchema } from "./bank";
+import sha256 from "crypto-js/sha256";
+import encHex from "crypto-js/enc-hex";
 
 const transactionSchema = z.object({
-  mmid: z.string().nonempty(),
   vid: z.string().nonempty(),
   amount: z.coerce.number().default(0),
   pin: z.string().nonempty(),
@@ -31,17 +32,24 @@ const icici_blockchain = new Blockchain("ICICI");
 const sbi_blockchain = new Blockchain("SBI");
 
 export const handleUserTransaction = asyncHandler(async (req, res, next) => {
-  const { mmid, vid, amount, pin } = transactionSchema.parse(req.body);
-  console.log(mmid, vid, amount, pin, "hi");
+  const { vid, amount, pin } = transactionSchema.parse(req.body);
   const { id } = paramsSchema.parse(req.params);
   const user = await db.query.users.findFirst({
-    where: (users) =>
-      and(eq(users.id, id), eq(users.mmid, mmid), eq(users.pin, pin)),
+    where: (users) => and(eq(users.id, id)),
   });
+
   if (!user) {
     return next(
       new HttpError(HttpCode.NOT_FOUND, "User credentials incorrect")
     );
+  }
+
+  const mmid = sha256(pin + user.phoneNumber)
+    .toString(encHex)
+    .substring(0, 16);
+
+  if (mmid != user.mmid) {
+    return next(new HttpError(HttpCode.NOT_FOUND, "User pin incorrect"));
   }
 
   const { merchantID, timestamp } = reverseVidFull(vid, env.SPECK_KEY);

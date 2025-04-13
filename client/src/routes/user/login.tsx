@@ -35,7 +35,7 @@ function RouteComponent() {
   const loginMutation = useMutation({
     mutationFn: async (data: LoginType) => {
       const response = await axios.post(
-        "http://localhost:8000/user/login",
+        "http://192.168.200.129:8000/user/login",
         data
       );
       return response;

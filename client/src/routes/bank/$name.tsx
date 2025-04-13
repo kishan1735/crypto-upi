@@ -24,7 +24,7 @@ function RouteComponent() {
     queryKey: [`bank ${name}`],
     queryFn: async () => {
       const response = await axios.get(
-        `http://localhost:8000/bank/${name.toUpperCase()}`
+        `http://192.168.200.129:8000/bank/${name.toUpperCase()}`
       );
       setBank(response.data.data.name);
       return [

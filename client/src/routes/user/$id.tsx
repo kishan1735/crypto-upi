@@ -14,7 +14,9 @@ function RouteComponent() {
   const { data, isLoading, isError } = useQuery({
     queryKey: [`merchant ${id}`],
     queryFn: async () => {
-      const response = await axios.get(`http://localhost:8000/user/${id}`);
+      const response = await axios.get(
+        `http://192.168.200.129:8000/user/${id}`
+      );
       return response.data.user;
     },
   });

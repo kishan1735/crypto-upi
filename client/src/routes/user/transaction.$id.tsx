@@ -25,7 +25,6 @@ export const Route = createFileRoute("/user/transaction/$id")({
 });
 
 const transactionSchema = z.object({
-  mmid: z.string().nonempty(),
   vid: z.string().nonempty(),
   amount: z.coerce.number().default(0),
   pin: z.string().nonempty(),
@@ -45,7 +44,10 @@ function RouteComponent() {
   const navigate = useNavigate();
   const transactionMutation = useMutation({
     mutationFn: async (data: TransactionType) => {
-      await axios.post(`http://localhost:8000/upi/transaction/${id}`, data);
+      await axios.post(
+        `http://192.168.200.129:8000/upi/transaction/${id}`,
+        data
+      );
     },
     onSuccess: () => {
       toast.success("Transaction successful");
@@ -83,24 +85,6 @@ function RouteComponent() {
                     render={({ field }) => (
                       <FormItem>
                         <FormLabel>PIN</FormLabel>
-                        <FormControl>
-                          <Input
-                            className="text-center px-4"
-                            {...field}
-                            required
-                          />
-                        </FormControl>
-                      </FormItem>
-                    )}
-                  ></FormField>
-                </div>
-                <div className="grid gap-2">
-                  <FormField
-                    control={form.control}
-                    name="mmid"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>MMID</FormLabel>
                         <FormControl>
                           <Input
                             className="text-center px-4"

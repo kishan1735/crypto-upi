@@ -52,7 +52,7 @@ function RouteComponent() {
 
   const registerMutation = useMutation({
     mutationFn: async (data: RegisterType) => {
-      await axios.post("http://localhost:8000/user/register", data);
+      await axios.post("http://192.168.200.129:8000/user/register", data);
     },
     onSuccess: () => {
       toast.success("User Registered Successfully");
